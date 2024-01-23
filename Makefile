@@ -1,5 +1,5 @@
 NAME = philo
-SRC = main.c utils.c philo.h
+SRC = main.c utils.c init.c safe_functions.c
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -f
