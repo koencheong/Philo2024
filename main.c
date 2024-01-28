@@ -20,13 +20,13 @@ int	main(int argc, char **argv)
 	{
 		parse_input(&table, argv);
 		data_init(&table);
-		// start_simulation(&table);
+		start_simulation(&table);
 		// clean(&table);
-		printf("%ld\n", table.philo_nbr);
-		printf("%ld\n", table.time_to_die);
-		printf("%ld\n", table.time_to_eat);
-		printf("%ld\n", table.time_to_sleep);
-		printf("%ld\n", table.meals_nbr);
+		// printf("%ld\n", table.philo_nbr);
+		// printf("%ld\n", table.time_to_die);
+		// printf("%ld\n", table.time_to_eat);
+		// printf("%ld\n", table.time_to_sleep);
+		// printf("%ld\n", table.meals_nbr);
 	}
 	else
 		error_exit("Wrong input.");

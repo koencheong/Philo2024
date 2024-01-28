@@ -77,3 +77,6 @@ void	data_init(t_table *table);
 
 // safe functions
 void	*safe_malloc(size_t size);
+
+// philo
+void	start_simulation(t_table *table);
