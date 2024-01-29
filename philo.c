@@ -25,6 +25,12 @@ void	start_simulation(t_table *table)
 		{
 			// printf("i is %d\n", i);
 			pthread_create(&table->philos[i].thread_id, NULL, dinner_simulation, &table->philos[i]);
+			ft_usleep(1);
+			i++;
+		}
+		i = 0;
+		while ( i < table->philo_nbr)
+		{
 			pthread_join(table->philos[i].thread_id, NULL);
 			i++;
 		}

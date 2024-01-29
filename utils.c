@@ -71,3 +71,22 @@ void	parse_input(t_table *table, char **argv)
 	else
 		table->meals_nbr = -1;
 }
+
+int	ft_usleep(useconds_t time)
+{
+	long	start;
+
+	start = get_time();
+	while ((get_time() - start) < time)
+		usleep(time / 10);
+	return (0);
+}
+
+long get_time()
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL))
+		error_exit("gettimeofday failed");
+	return ((tv.tv_sec * (long)1000) + (tv.tv_usec / 1000));
+}

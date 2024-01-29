@@ -71,6 +71,8 @@ typedef struct s_philo
 void	error_exit(const char *error);
 long	ft_atol(const char *str);
 void	parse_input(t_table *table, char **argv);
+long	get_time();
+int		ft_usleep(useconds_t time);
 
 // init
 void	data_init(t_table *table);
