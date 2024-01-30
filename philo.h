@@ -60,10 +60,12 @@ typedef struct s_philo
 	long		meals_counter;
 	bool		full;
 	long		last_meal_time;
+	long		start_time;
 	t_fork		*first_fork;
 	t_fork		*second_fork;
 	pthread_t	thread_id;
 	t_data		*data;
+	t_mtx		write_lock;
 }	t_philo;
 
 
@@ -81,4 +83,4 @@ void	data_init(t_data *data);
 void	*safe_malloc(size_t size);
 
 // philo
-void	start_simulation(t_data *data);
+void	start_routine(t_data *data);

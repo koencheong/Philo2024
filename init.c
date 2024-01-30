@@ -29,7 +29,9 @@ static void philo_init(t_data *data)
 		philo->full = false;
 		philo->meals_counter = 0;
 		philo->data = data;
+		philo->start_time = get_time();
 		assign_forks(philo, data->forks, i);
+		pthread_mutex_init(&philo->write_lock, NULL);
 		// printf("Philo %d first fork is %d second fork is %d\n", philo->id, philo->first_fork->fork_id, philo->second_fork->fork_id);
 		i++;
 	}

@@ -20,7 +20,7 @@ int	main(int argc, char **argv)
 	{
 		parse_input(&data, argv);
 		data_init(&data);
-		start_simulation(&data);
+		start_routine(&data);
 		// clean(&data);
 		// printf("%ld\n", data.philo_nbr);
 		// printf("%ld\n", data.time_to_die);
