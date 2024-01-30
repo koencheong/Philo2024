@@ -56,20 +56,20 @@ long	ft_atol(const char *str)
 	return (num);
 }
 
-void	parse_input(t_table *table, char **argv)
+void	parse_input(t_data *data, char **argv)
 {
-	table->philo_nbr = ft_atol(argv[1]);
-	table->time_to_die = (ft_atol(argv[2])) * 1000;
-	table->time_to_eat = (ft_atol(argv[3]) * 1000);
-	table->time_to_sleep = (ft_atol(argv[4]) * 1000);
-	if (table->time_to_die < 60000
-		|| table->time_to_eat < 60000
-		|| table->time_to_sleep < 60000)
+	data->philo_nbr = ft_atol(argv[1]);
+	data->time_to_die = (ft_atol(argv[2])) * 1000;
+	data->time_to_eat = (ft_atol(argv[3]) * 1000);
+	data->time_to_sleep = (ft_atol(argv[4]) * 1000);
+	if (data->time_to_die < 60000
+		|| data->time_to_eat < 60000
+		|| data->time_to_sleep < 60000)
 		error_exit("Die/Eat/Sleep time need to be larger than 60ms.");
 	if (argv[5])
-		table->meals_nbr = ft_atol(argv[5]);
+		data->meals_nbr = ft_atol(argv[5]);
 	else
-		table->meals_nbr = -1;
+		data->meals_nbr = -1;
 }
 
 int	ft_usleep(useconds_t time)

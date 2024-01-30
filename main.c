@@ -14,19 +14,19 @@
 
 int	main(int argc, char **argv)
 {
-	t_table	table;
+	t_data	data;
 
 	if (argc == 5 || argc == 6)
 	{
-		parse_input(&table, argv);
-		data_init(&table);
-		start_simulation(&table);
-		// clean(&table);
-		// printf("%ld\n", table.philo_nbr);
-		// printf("%ld\n", table.time_to_die);
-		// printf("%ld\n", table.time_to_eat);
-		// printf("%ld\n", table.time_to_sleep);
-		// printf("%ld\n", table.meals_nbr);
+		parse_input(&data, argv);
+		data_init(&data);
+		start_simulation(&data);
+		// clean(&data);
+		// printf("%ld\n", data.philo_nbr);
+		// printf("%ld\n", data.time_to_die);
+		// printf("%ld\n", data.time_to_eat);
+		// printf("%ld\n", data.time_to_sleep);
+		// printf("%ld\n", data.meals_nbr);
 	}
 	else
 		error_exit("Wrong input.");

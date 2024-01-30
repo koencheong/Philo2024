@@ -41,7 +41,7 @@ typedef struct s_fork
 	int		fork_id;
 }	t_fork;
 
-typedef struct s_table
+typedef struct s_data
 {
 	long	philo_nbr;
 	long	time_to_die;
@@ -49,10 +49,10 @@ typedef struct s_table
 	long	time_to_sleep;
 	long	meals_nbr;
 	long	start_time;
-	bool	end_simulation;
+	bool	dead;
 	t_fork	*forks;
 	struct	s_philo	*philos;
-}	t_table;
+}	t_data;
 
 typedef struct s_philo
 {
@@ -63,22 +63,22 @@ typedef struct s_philo
 	t_fork		*first_fork;
 	t_fork		*second_fork;
 	pthread_t	thread_id;
-	t_table		*table;
+	t_data		*data;
 }	t_philo;
 
 
 // utils
 void	error_exit(const char *error);
 long	ft_atol(const char *str);
-void	parse_input(t_table *table, char **argv);
-long	get_time();
+void	parse_input(t_data *data, char **argv);
+long	get_time(void);
 int		ft_usleep(useconds_t time);
 
 // init
-void	data_init(t_table *table);
+void	data_init(t_data *data);
 
 // safe functions
 void	*safe_malloc(size_t size);
 
 // philo
-void	start_simulation(t_table *table);
+void	start_simulation(t_data *data);
