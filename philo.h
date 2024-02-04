@@ -19,19 +19,12 @@
 #include <sys/time.h> // gettimeofday
 #include <limits.h> // INT_MAX
 
-/*
-	CODE FOR MUTEX / THREAD FUNCTIONS
-*/
-typedef enum	e_code
+typedef enum	status
 {
-	LOCK,
-	UNLOCK,
-	INIT,
-	DESTROY,
-	CREATE,
-	JOIN,
-	DETACH,
-}	t_ecode;
+	EATING,
+	THINKING,
+	SLEEPING
+}	t_status;
 
 typedef pthread_mutex_t	t_mtx;
 
@@ -48,9 +41,9 @@ typedef struct s_data
 	long	time_to_eat;
 	long	time_to_sleep;
 	long	meals_nbr;
-	long	start_time;
-	bool	dead;
+	// long	start_time;
 	t_fork	*forks;
+	t_mtx	check_lock;
 	struct	s_philo	*philos;
 }	t_data;
 
@@ -58,7 +51,8 @@ typedef struct s_philo
 {
 	int			id;
 	long		meals_counter;
-	bool		full;
+	bool		isFull;
+	bool		isDead;
 	long		last_meal_time;
 	long		start_time;
 	t_fork		*first_fork;
@@ -66,6 +60,7 @@ typedef struct s_philo
 	pthread_t	thread_id;
 	t_data		*data;
 	t_mtx		write_lock;
+	t_mtx		debug;
 }	t_philo;
 
 
