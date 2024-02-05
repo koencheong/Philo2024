@@ -110,7 +110,7 @@ void	*routine(void *data)
 			write_message(philo, "is sleeping");
 			waitForAction(philo, SLEEPING);
 			write_message(philo, "is thinking");
-			printf("done here?\n");
+			// printf("done here?\n");
 		}
 	}
 	return (NULL);
@@ -135,12 +135,12 @@ void	start_routine(t_data *data)
 		}
 	}
 	checkIsDead(data->philos);
-	i = 0;
-	while (i < data->philo_nbr)
-	{
-		pthread_join(data->philos[i].thread_id, NULL);
-		printf("Joining philo [%d].....\n", i + 1);
-		// pthread_detach(data->philos[i].thread_id);
-		i++;
-	}
+	// i = 0;
+	// while (i < data->philo_nbr)
+	// {
+	// 	pthread_join(data->philos[i].thread_id, NULL);
+	// 	printf("Joining philo [%d].....\n", i + 1);
+	// 	// pthread_detach(data->philos[i].thread_id);
+	// 	i++;
+	// }
 }
