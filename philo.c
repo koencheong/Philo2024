@@ -53,47 +53,85 @@ int	anyoneDied(t_philo *philo)
 {
 	int	ret;
 	int	i;
+	int	n;
 
 	ret = 0;
 	i = 0;
 	pthread_mutex_lock(&philo->data->check_lock);
-	while (i < philo->data->philo_nbr)
+	n = philo->data->philo_nbr;
+	pthread_mutex_unlock(&philo->data->check_lock);
+	while (i < n)
 	{
+		pthread_mutex_lock(&philo->data->check_lock);
 		if (philo->data->philos[i].isDead == true)
 			ret = 1;
+		pthread_mutex_unlock(&philo->data->check_lock);
 		i++;
 	}
-	pthread_mutex_unlock(&philo->data->check_lock);
 	return (ret);
 }
 
-void	waitForAction(t_philo *philo, t_status status)
+void	waitForAction(t_philo *philo, long time)
 {
 	long	start;
+	// long	eat;
+	// long	sleep;
 
 	start = get_time();
+	// pthread_mutex_lock(&philo->data->check2_lock);
+	// eat = philo->data->time_to_eat;
+	// sleep = philo->data->time_to_sleep;
+	// pthread_mutex_unlock(&philo->data->check2_lock);
 	while (anyoneDied(philo) != true)
 	{
-		if (status == EATING)
-		{
-			if (get_time() - start >= philo->data->time_to_eat)
-				return ;
-		}
-		else if (status == SLEEPING)
-		{
-			if (get_time() - start >= philo->data->time_to_sleep)
-				return ;
-		}
-		ft_usleep(50);
+		if (get_time() - start >= time)
+			return ;
+		ft_usleep(20);
 	}
 	return ;
 }
 
-void	*routine(void *data)
+// void	waitForAction(t_philo *philo, long time)
+// {
+// 	long	start;
+// 	// long	eat;
+// 	// long	sleep;
+
+// 	start = get_time();
+// 	// pthread_mutex_lock(&philo->data->check2_lock);
+// 	// eat = philo->data->time_to_eat;
+// 	// sleep = philo->data->time_to_sleep;
+// 	// pthread_mutex_unlock(&philo->data->check2_lock);
+// 	while (anyoneDied(philo) != true)
+// 	{
+// 		if (status == EATING)
+// 		{
+// 			if (get_time() - start >= eat)
+// 				return ;
+// 		}
+// 		else if (status == SLEEPING)
+// 		{
+// 			if (get_time() - start >= sleep)
+// 				return ;
+// 		}
+// 		ft_usleep(50);
+// 	}
+// 	return ;
+// }
+
+void	*routine(void *philoPassed)
 {
 	t_philo *philo;
-
-	philo = (t_philo *) data;
+	long	eat;
+	long	sleep;
+	
+	// pthread_mutex_lock(&((t_philo *) philoPassed)->data->check_lock);
+	philo = (t_philo *) philoPassed;
+	// pthread_mutex_unlock(&philo->data->check_lock);
+	pthread_mutex_lock(&philo->data->check_lock);
+	eat = philo->data->time_to_eat;
+	sleep = philo->data->time_to_sleep;
+	pthread_mutex_unlock(&philo->data->check_lock);
 	while (anyoneDied(philo) != true)
 	{
 		if (anyoneDied(philo) != true)
@@ -111,7 +149,7 @@ void	*routine(void *data)
 			// pthread_mutex_lock(&philo->check_lock);
 			// printf("hi\n");
 			// pthread_mutex_unlock(&philo->check_lock);
-			waitForAction(philo, EATING);
+			waitForAction(philo, eat);
 			pthread_mutex_unlock(&philo->first_fork->fork);
 			pthread_mutex_unlock(&philo->second_fork->fork);
 		}
@@ -119,7 +157,7 @@ void	*routine(void *data)
 		if (anyoneDied(philo) != true)
 		{
 			write_message(philo, "is sleeping");
-			waitForAction(philo, SLEEPING);
+			waitForAction(philo, sleep);
 			write_message(philo, "is thinking");
 			// printf("done here?\n");
 		}
