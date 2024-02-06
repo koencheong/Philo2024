@@ -47,6 +47,7 @@ void	data_init(t_data *data)
 	data->philos = safe_malloc(sizeof(t_philo) * data->philo_nbr);
 	data->forks = safe_malloc(sizeof(t_fork) * data->philo_nbr);
 	pthread_mutex_init(&data->check_lock, NULL);
+	pthread_mutex_init(&data->check2_lock, NULL);
 	while (i < data->philo_nbr)
 	{
 		pthread_mutex_init(&data->forks[i].fork, NULL);

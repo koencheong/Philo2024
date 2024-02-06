@@ -2,36 +2,50 @@
 
 void	write_message(t_philo *philo, char *message)
 {
-	pthread_mutex_lock(&philo->write_lock);
-	printf("%ld %d %s\n", get_time() - philo->start_time, philo->id, message);
-	pthread_mutex_unlock(&philo->write_lock);
+	// printf("inwritemsg\n");
+	if (anyoneDied(philo) == true)
+	{
+		// printf("someone died\n");
+		return ;
+	}
+	else
+	{
+		// printf("printmsg\n");
+		pthread_mutex_lock(&philo->write_lock);
+		printf("%ld %d %s\n", get_time() - philo->start_time, philo->id, message);
+		pthread_mutex_unlock(&philo->write_lock);
+	}
 }
 
 void	checkIsDead(t_philo *philo)
 {
 	int	i;
 	int	cont;
+	long time_to_die;
+	int	nbrOfPhilo;
 
 	cont = 1;
+	pthread_mutex_lock(&philo->data->check_lock);
+	time_to_die = philo->data->time_to_die;
+	nbrOfPhilo = philo->data->philo_nbr;
+	pthread_mutex_unlock(&philo->data->check_lock);
 	while (cont == 1)
 	{
 		i = 0;
-		pthread_mutex_lock(&philo->data->check_lock);
-		while (cont && (i < philo->data->philo_nbr))
+		while (cont && (i < nbrOfPhilo))
 		{
-			if (get_time() - philo->last_meal_time > philo->data->time_to_die)
+			if (get_time() - philo->last_meal_time > time_to_die)
 			{
 				// printf("philo is %d\n", philo->id);
-				philo->isDead = true;
-				cont = 0;
 				write_message(philo, "died");
-				// return ;
-				// exit(1);
+				pthread_mutex_lock(&philo->data->check_lock);
+				philo->isDead = true;
+				pthread_mutex_unlock(&philo->data->check_lock);
+				cont = 0;
 			}
 			// TODO: Check full or not if argument 6th exists
 			i++;
 		}
-		pthread_mutex_unlock(&philo->data->check_lock);
 	}
 }
 
@@ -131,9 +145,10 @@ void	start_routine(t_data *data)
 			// printf("i is %d\n", i);
 			pthread_create(&data->philos[i].thread_id, NULL, &routine, &data->philos[i]);
 			i++;
-			ft_usleep(20);
+			usleep(100);
 		}
 	}
+	// printf("heree\n");
 	checkIsDead(data->philos);
 	i = 0;
 	while (i < data->philo_nbr)

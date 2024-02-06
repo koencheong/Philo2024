@@ -44,6 +44,7 @@ typedef struct s_data
 	// long	start_time;
 	t_fork	*forks;
 	t_mtx	check_lock;
+	t_mtx	check2_lock;
 	struct	s_philo	*philos;
 }	t_data;
 
@@ -79,3 +80,4 @@ void	*safe_malloc(size_t size);
 
 // philo
 void	start_routine(t_data *data);
+int		anyoneDied(t_philo *philo);
