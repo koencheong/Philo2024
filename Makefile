@@ -1,7 +1,8 @@
 NAME = philo
-SRC = main.c utils.c init.c philo.c safe_functions.c
+SRC = main.c utils.c init.c philo.c philo_functions.c
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -pthread
+# CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread
 RM = rm -f
 
 all: $(NAME)

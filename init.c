@@ -1,7 +1,22 @@
 #include "philo.h"
-#include <stdio.h>
 
-static void assign_forks(t_philo *philo, t_fork *forks, int position)
+void	parse_input(t_data *data, char **argv)
+{
+	data->philo_nbr = ft_atol(argv[1]);
+	data->time_to_die = (ft_atol(argv[2]));
+	data->time_to_eat = (ft_atol(argv[3]));
+	data->time_to_sleep = (ft_atol(argv[4]));
+	if (data->time_to_die < 60
+		|| data->time_to_eat < 60
+		|| data->time_to_sleep < 60)
+		error_exit("Die/Eat/Sleep time need to be larger than 60ms.");
+	if (argv[5])
+		data->meals_nbr = ft_atol(argv[5]);
+	else
+		data->meals_nbr = -1;
+}
+
+static void	assign_forks(t_philo *philo, t_fork *forks, int position)
 {
 	int	philo_nbr;
 
@@ -10,31 +25,27 @@ static void assign_forks(t_philo *philo, t_fork *forks, int position)
 	philo->second_fork = &forks[position];
 	if (philo->id % 2 == 0)
 	{
-		// printf("Philo position is %d\n", position);
 		philo->first_fork = &forks[position];
 		philo->second_fork = &forks[(position + 1) % philo_nbr];
 	}
 }
 
-static void philo_init(t_data *data)
+static void	philo_init(t_data *data)
 {
-	int i;
-	t_philo *philo;
+	int		i;
+	t_philo	*philo;
 
 	i = 0;
 	while (i < data->philo_nbr)
 	{
 		philo = data->philos + i;
 		philo->id = i + 1;
-		philo->isFull = false;
 		philo->isDead = false;
 		philo->meals_counter = 0;
 		philo->data = data;
 		philo->start_time = get_time();
 		assign_forks(philo, data->forks, i);
 		pthread_mutex_init(&philo->write_lock, NULL);
-		pthread_mutex_init(&philo->debug, NULL);
-		// printf("Philo %d first fork is %d second fork is %d\n", philo->id, philo->first_fork->fork_id, philo->second_fork->fork_id);
 		i++;
 	}
 }
