@@ -17,30 +17,33 @@ void	write_message(t_philo *philo, char *message)
 	}
 }
 
-void	checkIsDead(t_philo *philo)
+void	checkIsDead(t_data *data)
 {
 	int	i;
 	int	cont;
 	long time_to_die;
-	int	nbrOfPhilo;
+	int	nbr_of_philo;
+	long	last_meal;
 
 	cont = 1;
-	pthread_mutex_lock(&philo->data->check_lock);
-	time_to_die = philo->data->time_to_die;
-	nbrOfPhilo = philo->data->philo_nbr;
-	pthread_mutex_unlock(&philo->data->check_lock);
 	while (cont == 1)
 	{
 		i = 0;
-		while (cont && (i < nbrOfPhilo))
+		pthread_mutex_lock(&data->check_lock);
+		time_to_die = data->time_to_die;
+		nbr_of_philo = data->philo_nbr;
+		last_meal = data->philos[i].last_meal_time;
+		pthread_mutex_unlock(&data->check_lock);
+		while (cont && (i < nbr_of_philo))
 		{
-			if (get_time() - philo->last_meal_time > time_to_die)
+			if (get_time() - last_meal > time_to_die)
 			{
 				// printf("philo is %d\n", philo->id);
-				write_message(philo, "died");
-				pthread_mutex_lock(&philo->data->check_lock);
-				philo->isDead = true;
-				pthread_mutex_unlock(&philo->data->check_lock);
+				write_message(&data->philos[i], "died");
+				// pthread_mutex_lock(&philo->data->check_lock);
+				pthread_mutex_lock(&data->check2_lock);
+				data->philos[i].isDead = true;
+				pthread_mutex_unlock(&data->check2_lock);
 				cont = 0;
 			}
 			// TODO: Check full or not if argument 6th exists
@@ -62,10 +65,10 @@ int	anyoneDied(t_philo *philo)
 	pthread_mutex_unlock(&philo->data->check_lock);
 	while (i < n)
 	{
-		pthread_mutex_lock(&philo->data->check_lock);
+		pthread_mutex_lock(&philo->data->check2_lock);
 		if (philo->data->philos[i].isDead == true)
 			ret = 1;
-		pthread_mutex_unlock(&philo->data->check_lock);
+		pthread_mutex_unlock(&philo->data->check2_lock);
 		i++;
 	}
 	return (ret);
@@ -144,11 +147,11 @@ void	*routine(void *philoPassed)
 			pthread_mutex_lock(&philo->second_fork->fork);
 			write_message(philo, "has taken a fork");
 			write_message(philo, "is eating");
+			pthread_mutex_lock(&philo->data->check_lock);
 			philo->last_meal_time = get_time();
+			pthread_mutex_unlock(&philo->data->check_lock);
 			// TODO: CHECK REQUIRED NUMBER OF MEALS
-			// pthread_mutex_lock(&philo->check_lock);
 			// printf("hi\n");
-			// pthread_mutex_unlock(&philo->check_lock);
 			waitForAction(philo, eat);
 			pthread_mutex_unlock(&philo->first_fork->fork);
 			pthread_mutex_unlock(&philo->second_fork->fork);
@@ -187,7 +190,7 @@ void	start_routine(t_data *data)
 		}
 	}
 	// printf("heree\n");
-	checkIsDead(data->philos);
+	checkIsDead(data);
 	i = 0;
 	while (i < data->philo_nbr)
 	{
